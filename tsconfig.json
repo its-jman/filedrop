@@ -6,5 +6,7 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler"
-	}
+	},
+	"include": ["src"],
+	"exclude": ["worker"]
 }

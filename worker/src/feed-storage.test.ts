@@ -1,6 +1,6 @@
 import {env, runInDurableObject, SELF} from 'cloudflare:test'
 import {expect, it} from 'vitest'
-import {FeedStorage} from '../src/feed-storage'
+import {FeedStorage} from './feed-storage'
 
 it('test say hello', async () => {
 	const response = await SELF.fetch('https://_')
