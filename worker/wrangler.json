@@ -1,0 +1,18 @@
+{
+	"name": "digester-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2024-12-05",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "FEED_STORAGE",
+				"class_name": "FeedStorage"
+			}
+		]
+	},
+	"migrations": [{"tag": "v1", "new_classes": ["FeedStorage"]}]
+}

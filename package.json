@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "prettier": "@jman.dev/prettier-config",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "vite --port=3001",
@@ -11,16 +12,25 @@
     "start": "vite"
   },
   "devDependencies": {
+    "@tanstack/router-plugin": "^1.87.13",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@tanstack/router-plugin": "^1.87.13",
     "@vitejs/plugin-react": "^4.3.2",
     "vite": "^6.0.3"
   },
   "dependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.5.36",
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "@jman.dev/prettier-config": "^0.1.8",
     "@tanstack/react-router": "^1.88.0",
     "@tanstack/router-devtools": "^1.88.0",
+    "@teeny.dev/durable": "^0.0.14",
+    "prettier": "^3.4.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "superjson": "^2.2.2",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.95.0",
+    "zod": "^3.24.1"
   }
 }

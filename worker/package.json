@@ -1,0 +1,12 @@
+{
+	"name": "digester-worker",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"types": "wrangler types",
+		"dev": "wrangler dev",
+		"start": "nr dev",
+		"test": "vitest",
+		"clear": "rm -rf .wrangler"
+	}
+}
