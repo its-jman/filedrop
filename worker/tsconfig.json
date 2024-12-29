@@ -1,11 +1,14 @@
 {
 	"compilerOptions": {
-		"lib": ["es2021"],
+		"lib": ["esnext"],
 		"jsx": "react-jsx",
 		"target": "es2021",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"types": ["@cloudflare/workers-types/2024-12-05", "@cloudflare/vitest-pool-workers"],
+		"types": [
+			"@cloudflare/workers-types/experimental",
+			"@cloudflare/vitest-pool-workers"
+		],
 		"resolveJsonModule": true,
 		"allowJs": true,
 		"checkJs": false,

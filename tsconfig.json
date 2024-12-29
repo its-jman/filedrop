@@ -3,6 +3,7 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
+		"lib": ["esnext", "DOM"],
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler"
