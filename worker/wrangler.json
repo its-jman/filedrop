@@ -9,10 +9,10 @@
 	"durable_objects": {
 		"bindings": [
 			{
-				"name": "FEED_STORAGE",
-				"class_name": "FeedStorage"
+				"name": "FEED_STORE",
+				"class_name": "FeedStore"
 			}
 		]
 	},
-	"migrations": [{"tag": "v1", "new_classes": ["FeedStorage"]}]
+	"migrations": [{"tag": "v1", "new_sqlite_classes": ["FeedStore"]}]
 }

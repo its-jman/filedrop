@@ -1,38 +1,38 @@
 {
-  "name": "digester",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "prettier": "@jman.dev/prettier-config",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "dev": "vite --port=3001",
-    "build": "vite build",
-    "serve": "vite preview",
-    "start": "vite"
-  },
-  "devDependencies": {
-    "@tanstack/router-plugin": "^1.87.13",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.2",
-    "vite": "^6.0.3"
-  },
-  "dependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.5.36",
-    "@cloudflare/workers-types": "^4.20241205.0",
-    "@jman.dev/prettier-config": "^0.1.8",
-    "@tanstack/react-router": "^1.88.0",
-    "@tanstack/router-devtools": "^1.88.0",
-    "@teeny.dev/durable": "^0.0.14",
-    "dayjs": "^1.11.13",
-    "prettier": "^3.4.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "superjson": "^2.2.2",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8",
-    "wrangler": "^3.95.0",
-    "zod": "^3.24.1"
-  }
+	"name": "digester",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"prettier": "@jman.dev/prettier-config",
+	"scripts": {
+		"typecheck": "tsc --noEmit",
+		"dev": "vite --port=3001",
+		"build": "vite build",
+		"serve": "vite preview",
+		"test": "vitest",
+		"start": "vite"
+	},
+	"dependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.6.9",
+		"@cloudflare/workers-types": "^4.20250129.0",
+		"@jman.dev/prettier-config": "^0.1.8",
+		"@tanstack/react-router": "^1.98.3",
+		"@tanstack/router-devtools": "^1.98.3",
+		"@tanstack/router-plugin": "^1.98.3",
+		"@teeny.dev/durable": "^0.0.23",
+		"@types/react": "^19.0.8",
+		"@types/react-dom": "^19.0.3",
+		"@vitejs/plugin-react": "^4.3.4",
+		"dayjs": "^1.11.13",
+		"prettier": "^3.4.2",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"superjson": "^2.2.2",
+		"typescript": "^5.7.3",
+		"vite": "^6.0.11",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^2.1.8",
+		"wrangler": "^3.107.0",
+		"zod": "^3.24.1"
+	}
 }
