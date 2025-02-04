@@ -1,3 +1,7 @@
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween)
+
 import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
 import {appRouter} from './trpc'
 

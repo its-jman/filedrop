@@ -20,7 +20,7 @@ const FeedItemSchema = z.object({
 	description: z.string().nullable().optional(),
 	pub_date: z.coerce.date().nullable().optional(),
 })
-type FeedItem = z.infer<typeof FeedItemSchema>
+export type FeedItem = z.infer<typeof FeedItemSchema>
 
 const MetaSchema = z.object({alarm_id: z.string(), feed_url: z.string()})
 type Meta = z.infer<typeof MetaSchema>
@@ -100,7 +100,7 @@ export class FeedStore extends DurableObject {
 			migrations: {
 				['000_init']: [
 					'CREATE TABLE meta_store (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL)',
-					'CREATE TABLE feed_store (id TEXT PRIMARY KEY, link TEXT NOT NULL, title TEXT NOT NULL, description TEXT, pub_date TEXT)',
+					'CREATE TABLE feed_store (id TEXT PRIMARY KEY, link TEXT NOT NULL, title TEXT NOT NULL, description TEXT, pub_date TEXT NOT NULL)',
 					'CREATE INDEX IF NOT EXISTS feed_store_date ON feed_store (pub_date)',
 				],
 			},
@@ -176,7 +176,7 @@ export class FeedStore extends DurableObject {
 					item.link,
 					item.title,
 					item.description ?? undefined,
-					item.pub_date?.toISOString() ?? undefined
+					item.pub_date?.toISOString() ?? dayjs().toISOString()
 				)
 			} else if (itemNeedsUpdate(item, storedItem)) {
 				this.sql.exec(
@@ -184,7 +184,7 @@ export class FeedStore extends DurableObject {
 					item.link,
 					item.title,
 					item.description ?? undefined,
-					item.pub_date?.toISOString() ?? undefined,
+					item.pub_date?.toISOString() ?? storedItem.pub_date,
 					item.id
 				)
 			}
@@ -210,8 +210,7 @@ export class FeedStore extends DurableObject {
 	listItems(cfg?: {startAfter?: Date; limit?: number}): Array<FeedItem> {
 		let {startAfter, limit = 100} = cfg ?? {}
 		if (limit > 100 || limit < 1) {
-			console.warn('Limit set to an invalid value, > 100 or < 1')
-			limit = 100
+			throw new Error('Limit set to an invalid value, > 100 or < 1')
 		}
 
 		const rawItems = this.sql
