@@ -1,10 +1,5 @@
 import {DurableObject} from 'cloudflare:workers'
-import {
-	createTypedStorage,
-	createAlarmManager,
-	type AlarmManager,
-	prepareSqlite,
-} from '@teeny.dev/durable'
+import {createAlarmManager, prepareSqlite, type AlarmManager} from '@teeny.dev/durable'
 import {z} from 'zod'
 import {Feed as HtmlParserFeed, parseFeed} from 'htmlparser2'
 import dayjs, {Dayjs} from 'dayjs'
@@ -92,7 +87,7 @@ export function itemNeedsUpdate(item1: FeedItem, item2: FeedItem): boolean {
 export class FeedStore extends DurableObject {
 	sql
 	__meta: Meta | null = null
-	alarm: AlarmManager<typeof AlarmSchema>
+	alarm
 
 	constructor(ctx: DurableObjectState, env: Env) {
 		super(ctx, env)

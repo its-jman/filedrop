@@ -10,9 +10,5 @@
 		"test": "vitest",
 		"clear": "rm -rf .wrangler"
 	},
-	"dependencies": {
-		"@trpc/server": "^11.0.1",
-		"htmlparser2": "^10.0.0",
-		"zod-validation-error": "^3.4.0"
-	}
+	"dependencies": {}
 }
