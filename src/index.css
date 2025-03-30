@@ -1,0 +1,39 @@
+@layer reset, base, mantine, tokens, recipes, utilities;
+
+/* TODO: This file does not seem to refresh reliably without restarting dev server? */
+@layer utilities {
+	html {
+		overflow-y: scroll;
+	}
+
+	body {
+		margin: 0;
+		color: #000;
+		font-family: 'Poppins';
+		font-size: 16px;
+		font-weight: 400;
+		background-color: #f5f7fa;
+		line-height: 150%;
+	}
+
+	#root {
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		height: auto;
+
+		& > * {
+			width: 100%;
+		}
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+}
+
+@layer mantine {
+	.mantine-InputWrapper-error {
+		white-space: preserve;
+	}
+}

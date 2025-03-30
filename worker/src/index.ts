@@ -4,8 +4,7 @@ dayjs.extend(isBetween)
 
 import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
 import {appRouter} from './trpc'
-
-export {FeedStore} from './feed-store'
+export {FeedStore} from './stores/feed-store'
 
 export default {
 	async fetch(req, env, ctx): Promise<Response> {

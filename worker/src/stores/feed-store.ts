@@ -8,7 +8,7 @@ import {
 import {z} from 'zod'
 import {Feed as HtmlParserFeed, parseFeed} from 'htmlparser2'
 import dayjs, {Dayjs} from 'dayjs'
-import {DigesterError} from './utils'
+import {DigesterError} from '../utils'
 
 // #region types
 type HtmlParserItemRaw = Omit<HtmlParserFeed['items'][0], 'media'>

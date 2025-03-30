@@ -1,6 +1,10 @@
+import type {QueryClient} from '@tanstack/react-query'
+import {createTRPCReact} from '@trpc/react-query'
+import type {CreateReactUtils} from '@trpc/react-query/shared'
 import type {Dayjs} from 'dayjs'
 import dayjs from 'dayjs'
 import SuperJSON from 'superjson'
+import {type AppRouter, type RouterOutput} from '~server/trpc'
 
 export function initSuperJSON() {
 	SuperJSON.registerCustom(
@@ -11,4 +15,12 @@ export function initSuperJSON() {
 		},
 		'dayjs'
 	)
+}
+
+export const trpc = createTRPCReact<AppRouter>()
+
+export type RouterContext = {
+	queryClient: QueryClient
+	utils: CreateReactUtils<AppRouter, unknown>
+	user: null
 }

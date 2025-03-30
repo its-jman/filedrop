@@ -1,9 +1,17 @@
 {
 	"compilerOptions": {
 		"strict": true,
-		"esModuleInterop": true,
+		"types": ["@cloudflare/workers-types"],
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"],
+			"styled-system/*": ["./styled-system/*"],
+			"~server/*": ["./worker/src/*"]
+		},
 		"jsx": "react-jsx",
 		"lib": ["esnext", "DOM"],
+		"skipLibCheck": true,
+		"esModuleInterop": true,
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler"

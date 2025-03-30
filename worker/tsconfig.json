@@ -1,8 +1,6 @@
 {
 	"compilerOptions": {
-		"paths": {
-			"~/*": ["../src/*"]
-		},
+		"paths": {"~/*": ["../src/*"], "~server/*": ["./src/*"]},
 		"lib": ["esnext"],
 		"jsx": "react-jsx",
 		"target": "es2021",

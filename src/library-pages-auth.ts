@@ -1,0 +1,146 @@
+import {Auth} from '@auth/core'
+import {AuthAction, AuthConfig} from '@auth/core/types'
+import {type BuiltInProviders, type Provider, type ProviderId} from '@auth/core/providers'
+import {z} from 'zod'
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////// SERVER /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export interface PagesAuthConfig extends AuthConfig {}
+
+type BuildConfig<TEnv, TCtxData> =
+	| PagesAuthConfig
+	| ((ctx: EventContext<TEnv, 'auth', TCtxData>) => PagesAuthConfig)
+
+export function PagesAuth<TEnv, TCtxData>(buildConfig: BuildConfig<TEnv, TCtxData>) {
+	return {
+		async onRequest(ctx: EventContext<TEnv, 'auth', TCtxData>) {
+			const config = typeof buildConfig === 'function' ? buildConfig(ctx) : buildConfig
+			return await Auth(ctx.request, config)
+		},
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////// CLIENT /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+
+interface SignInOptions extends Record<string, unknown> {
+	/**
+	 * Specify to which URL the user will be redirected after signing in. Defaults to the page URL the sign-in is initiated from.
+	 *
+	 * [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl)
+	 */
+	callbackUrl?: string
+	/** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
+	redirect?: boolean
+}
+
+interface SignOutParams<R extends boolean = true> {
+	/** [Documentation](https://next-auth.js.org/getting-started/client#specifying-a-callbackurl-1) */
+	callbackUrl?: string
+	/** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
+	redirect?: R
+}
+
+/** Match `inputType` of `new URLSearchParams(inputType)` */
+export type SignInAuthorizationParams =
+	| string
+	| string[][]
+	| Record<string, string>
+	| URLSearchParams
+
+const csrfSchema = z.object({csrfToken: z.string()})
+
+/**
+ * Client-side method to initiate a signin flow
+ * or send the user to the signin page listing all possible providers.
+ * Automatically adds the CSRF token to the request.
+ *
+ * ```ts
+ * import { signIn } from "@auth/solid-start/client"
+ * signIn()
+ * signIn("provider") // example: signIn("github")
+ * ```
+ */
+export async function signIn<P extends ProviderId | undefined = undefined>(
+	providerId?: P,
+	options?: SignInOptions,
+	authorizationParams?: SignInAuthorizationParams
+) {
+	const {callbackUrl = window.location.href, redirect = true} = options ?? {}
+
+	// TODO: Support custom providers
+	const isCredentials = providerId === 'credentials'
+	const isEmail = providerId === 'email'
+	const isSupportingReturn = isCredentials || isEmail
+
+	// TODO: Handle custom base path
+	const signInUrl = `/auth/${isCredentials ? 'callback' : 'signin'}/${providerId}`
+
+	const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
+
+	// TODO: Handle custom base path
+	const csrfTokenResponse = await fetch('/auth/csrf')
+	const {csrfToken} = csrfSchema.parse(await csrfTokenResponse.json())
+
+	const res = await fetch(_signInUrl, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'X-Auth-Return-Redirect': '1',
+		},
+		// @ts-expect-error -- Just force convert to strings, should be improved?
+		body: new URLSearchParams({...options, csrfToken, callbackUrl}),
+	})
+
+	const signinSchema = z.object({url: z.string(), redirect: z.string().optional()})
+
+	const data = signinSchema.parse(await res.clone().json())
+	const error = new URL(data.url).searchParams.get('error')
+	if (redirect || !isSupportingReturn || !error) {
+		// TODO: Do not redirect for Credentials and Email providers by default in next major
+		window.location.href = data.url ?? data.redirect ?? callbackUrl
+		// If url contains a hash, the browser does not reload the page. We reload manually
+		if (data.url.includes('#')) window.location.reload()
+		return
+	}
+	return res
+}
+
+/**
+ * Signs the user out, by removing the session cookie.
+ * Automatically adds the CSRF token to the request.
+ *
+ * ```ts
+ * import { signOut } from "@auth/solid-start/client"
+ * signOut()
+ * ```
+ */
+export async function signOut(options?: SignOutParams) {
+	const {callbackUrl = window.location.href} = options ?? {}
+	// TODO: Custom base path
+	const csrfTokenResponse = await fetch('/auth/csrf')
+	const {csrfToken} = csrfSchema.parse(await csrfTokenResponse.json())
+	const res = await fetch(`/auth/signout`, {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'X-Auth-Return-Redirect': '1',
+		},
+		body: new URLSearchParams({csrfToken, callbackUrl}),
+	})
+	const signoutSchema = z.object({
+		url: z.string().optional(),
+		redirect: z.string().optional(),
+	})
+	const data = signoutSchema.parse(await res.json())
+
+	const url = data.url ?? data.redirect ?? callbackUrl
+	window.location.href = url
+	// If url contains a hash, the browser does not reload the page. We reload manually
+	if (url.includes('#')) window.location.reload()
+}

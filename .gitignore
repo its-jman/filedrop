@@ -16,3 +16,9 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+## Panda
+styled-system
+styled-system-studio
+
+*.gen.ts
