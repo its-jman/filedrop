@@ -1,10 +1,9 @@
-import {getAuthConfig, type CfEnv, type CfData} from '~server/lib-server'
-import {PagesAuth} from '~/library-pages-auth'
-import type {TnrFunction} from '~server/library-tnr'
+import {getAuthConfig, type CfFn} from '~server/lib-server'
+import {PagesAuth} from '~server/library-pages-auth-server'
 
 const FRONTEND_REPLACEMENTS = ['/auth/verify-request', '/auth/signin', '/auth/error']
 
-export const handler: TnrFunction<CfEnv, 'auth', CfData> = async (ctx) => {
+export const handler: CfFn = async (ctx) => {
 	const req = ctx.request as Request
 	const url = new URL(req.url)
 	if (req.method === 'GET' && FRONTEND_REPLACEMENTS.includes(url.pathname)) {

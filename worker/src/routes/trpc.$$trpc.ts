@@ -1,3 +1,3 @@
-import type {TnrFunction} from '~server/library-tnr'
+import type {CfFn} from '~server/lib-server'
 
-export const handler: TnrFunction = () => new Response()
+export const handler: CfFn = () => new Response()

@@ -5,11 +5,12 @@
 	"type": "module",
 	"prettier": "@jman.dev/prettier-config",
 	"scripts": {
-		"prepare": "panda codegen",
-		"typecheck": "tsc --noEmit",
+		"prepare": "panda codegen && nr -C worker worker-types",
+		"typecheck:web": "tsc --noEmit",
+		"typecheck:worker": "nr -C worker typecheck",
 		"test:web": "vitest",
 		"test:worker": "nr -C worker test",
-		"test": "nr typecheck && nr test:web run && nr test:worker run",
+		"test": "nr typecheck:web && nr typecheck:worker && nr test:web run && nr test:worker run",
 		"precommit": "nr test",
 		"dev": "vite --port=3001",
 		"build": "vite build",
@@ -19,7 +20,6 @@
 	"dependencies": {
 		"@auth/core": "^0.38.0",
 		"@cloudflare/vitest-pool-workers": "^0.8.8",
-		"@cloudflare/workers-types": "^4.20250327.0",
 		"@jman.dev/prettier-config": "^0.1.8",
 		"@mantine/core": "^7.17.3",
 		"@mantine/dates": "^7.17.3",

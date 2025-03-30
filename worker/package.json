@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"types": "wrangler types",
+		"worker-types": "wrangler types",
+		"typecheck": "nr worker-types && tsc --noEmit",
 		"dev": "wrangler dev",
 		"start": "nr dev",
 		"test": "vitest",

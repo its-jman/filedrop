@@ -1,9 +1,9 @@
-import type {TnrFunction} from './library-tnr'
+import type {CfFn} from './lib-server'
 
 import {handler as AuthHandler} from './routes/auth.$$auth'
 import {handler as TrpcHandler} from './routes/trpc.$$trpc'
 
-export const handler: TnrFunction = (ctx) => {
+export const handler: CfFn = (ctx) => {
 	const url = new URL(ctx.request.url)
 
 	if (url.pathname.startsWith('/auth/')) {

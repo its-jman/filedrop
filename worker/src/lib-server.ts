@@ -2,7 +2,8 @@ import {Auth, type AuthConfig} from '@auth/core'
 import Google from '@auth/core/providers/google'
 import Resend from '@auth/core/providers/resend'
 import {z} from 'zod'
-import type {PagesAuthConfig} from '~/library-pages-auth'
+import type {PagesAuthConfig} from '~server/library-pages-auth-server'
+import type {TnrFunction} from './library-tnr'
 
 const EnvSchema = z.object({
 	AUTH_SECRET: z.string(),
@@ -16,6 +17,7 @@ export type CfData = {
 }
 
 export type CfEventCtx<P extends string = never> = EventContext<CfEnv, P, CfData>
+export type CfFn = TnrFunction<CfEnv, 'auth', CfData>
 
 export function getAuthConfig(ctx: CfEventCtx): PagesAuthConfig {
 	return {
