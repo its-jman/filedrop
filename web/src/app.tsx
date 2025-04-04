@@ -8,8 +8,8 @@ import React from 'react'
 import {Suspense, useState} from 'react'
 import SuperJSON from 'superjson'
 import {createRouter as rawCreateRouter} from '@tanstack/react-router'
-import {trpc, RouterContext} from './lib-client'
 import {routeTree} from '~/routeTree.gen'
+import {trpc, type RouterContext} from './lib-client'
 
 const theme = createTheme({})
 

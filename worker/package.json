@@ -4,12 +4,10 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"worker-types": "wrangler types",
-		"typecheck": "nr worker-types && tsc --noEmit",
-		"dev": "wrangler dev",
-		"start": "nr dev",
-		"test": "vitest",
-		"clear": "rm -rf .wrangler"
-	},
-	"dependencies": {}
+		"prepare": "nr gen-types",
+		"gen-types": "wrangler types",
+		"typecheck": "nr gen-types && tsc",
+		"dev": "nr gen-types && wrangler dev",
+		"test": "vitest run"
+	}
 }

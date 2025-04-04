@@ -1,21 +1,8 @@
 {
-	"compilerOptions": {
-		"strict": true,
-		"types": [],
-		"baseUrl": ".",
-		"paths": {
-			"~/*": ["./src/*"],
-			"styled-system/*": ["./styled-system/*"],
-			"~server/*": ["./worker/src/*"]
-		},
-		"jsx": "react-jsx",
-		"lib": ["esnext", "DOM"],
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"target": "ESNext",
-		"module": "ESNext",
-		"moduleResolution": "bundler"
-	},
-	"include": ["src"],
-	"exclude": ["worker"]
+	"files": [],
+	"references": [
+		{"path": "./scripts/tsconfig.json"},
+		{"path": "./web/tsconfig.json"},
+		{"path": "./worker/tsconfig.json"}
+	]
 }

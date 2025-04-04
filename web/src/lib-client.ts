@@ -4,7 +4,7 @@ import type {CreateReactUtils} from '@trpc/react-query/shared'
 import type {Dayjs} from 'dayjs'
 import dayjs from 'dayjs'
 import SuperJSON from 'superjson'
-import {type AppRouter, type RouterOutput} from '~server/trpc'
+import type {AppRouter} from '~server/routes/trpc.[[trpc]]'
 
 export function initSuperJSON() {
 	SuperJSON.registerCustom(

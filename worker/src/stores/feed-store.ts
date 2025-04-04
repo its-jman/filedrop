@@ -3,7 +3,7 @@ import {createAlarmManager, prepareSqlite, type AlarmManager} from '@teeny.dev/d
 import {z} from 'zod'
 import {Feed as HtmlParserFeed, parseFeed} from 'htmlparser2'
 import dayjs, {Dayjs} from 'dayjs'
-import {DigesterError} from '../utils'
+import {DigesterError} from '~server/lib-server'
 
 // #region types
 type HtmlParserItemRaw = Omit<HtmlParserFeed['items'][0], 'media'>

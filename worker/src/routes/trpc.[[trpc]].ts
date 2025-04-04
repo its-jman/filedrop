@@ -1,12 +1,12 @@
+import type {CfFn} from '~server/lib-server'
+
 import {initTRPC, type inferRouterInputs, type inferRouterOutputs} from '@trpc/server'
 import SuperJSON from 'superjson'
 import {ZodError} from 'zod'
 import {fromZodError} from 'zod-validation-error'
-import {initSuperJSON} from '~/lib-client'
+import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
 
-initSuperJSON()
-
-export const t = initTRPC.context<{a: string}>().create({
+const t = initTRPC.context<{a: string}>().create({
 	transformer: SuperJSON,
 	errorFormatter: ({shape, error}) => {
 		return {
@@ -30,3 +30,15 @@ export const appRouter = t.router({
 export type AppRouter = typeof appRouter
 export type RouterInput = inferRouterInputs<AppRouter>
 export type RouterOutput = inferRouterOutputs<AppRouter>
+
+export const handler: CfFn = (req, env, ctx) =>
+	fetchRequestHandler({
+		endpoint: '/api/trpc',
+		req,
+		router: appRouter,
+		createContext: () => ({a: ''}),
+		onError({ctx, error}) {
+			const errorLogger = console.error
+			errorLogger(error)
+		},
+	})

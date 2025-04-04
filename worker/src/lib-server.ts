@@ -1,6 +1,5 @@
 import {Auth, type AuthConfig} from '@auth/core'
 import Google from '@auth/core/providers/google'
-import Resend from '@auth/core/providers/resend'
 import {z} from 'zod'
 import type {PagesAuthConfig} from '~server/library-pages-auth-server'
 import type {TnrFunction} from './library-tnr'
@@ -17,19 +16,23 @@ export type CfData = {
 }
 
 export type CfEventCtx<P extends string = never> = EventContext<CfEnv, P, CfData>
-export type CfFn = TnrFunction<CfEnv, 'auth', CfData>
+export type CfFn = TnrFunction<Env>
 
-export function getAuthConfig(ctx: CfEventCtx): PagesAuthConfig {
+export function getAuthConfig(
+	req: Request,
+	env: Env,
+	ctx: ExecutionContext
+): PagesAuthConfig {
 	return {
 		basePath: '/auth',
 		trustHost: true,
-		secret: ctx.env.AUTH_SECRET,
-		// adapter: DrizzleAdapter(ctx.data.DB),
+		secret: env.AUTH_SECRET,
+		// adapter: DrizzleAdapter(data.DB),
 		session: {strategy: 'jwt'},
 		providers: [
 			Google({
-				clientId: ctx.env.GOOGLE_CLIENT_ID,
-				clientSecret: ctx.env.GOOGLE_CLIENT_SECRET,
+				clientId: env.GOOGLE_CLIENT_ID,
+				clientSecret: env.GOOGLE_CLIENT_SECRET,
 				authorization: {params: {prompt: 'select_account'}},
 			}),
 		],
@@ -67,5 +70,13 @@ export async function getSession(
 	} catch (err) {
 		console.error(err)
 		return null
+	}
+}
+
+export class DigesterError extends Error {
+	detail: string
+	constructor(message: string, options: ErrorOptions & {detail: string}) {
+		super(message, options)
+		this.detail = options.detail
 	}
 }

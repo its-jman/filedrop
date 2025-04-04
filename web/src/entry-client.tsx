@@ -4,8 +4,6 @@ import '@mantine/notifications/styles.layer.css'
 import '@mantine/dates/styles.layer.css'
 
 import ReactDOM from 'react-dom/client'
-import {RouterProvider, createRouter} from '@tanstack/react-router'
-import {routeTree} from './routeTree.gen'
 import {App} from './app'
 
 const rootElement = document.getElementById('app')!

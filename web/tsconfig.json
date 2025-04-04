@@ -1,0 +1,15 @@
+{
+	"extends": "../scripts/tsconfig.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.web.tsbuildinfo",
+		"paths": {
+			"styled-system/*": ["./styled-system/*"],
+			"~/*": ["./src/*"],
+			"~server/*": ["../worker/src/*"]
+		},
+		"types": ["../worker/worker-configuration.d.ts"],
+		"lib": ["esnext", "DOM"],
+		"jsx": "react-jsx"
+	},
+	"include": ["./src"]
+}

@@ -1,16 +1,20 @@
-import type {CfFn} from './lib-server'
+import {handler as AuthHandler} from './routes/auth.[[auth]]'
+import {handler as TrpcHandler} from './routes/trpc.[[trpc]]'
 
-import {handler as AuthHandler} from './routes/auth.$$auth'
-import {handler as TrpcHandler} from './routes/trpc.$$trpc'
+export const NOT_FOUND = Symbol('NOT_FOUND')
 
-export const handler: CfFn = (ctx) => {
-	const url = new URL(ctx.request.url)
+export const handler = (
+	req: Request,
+	env: Env,
+	ctx: ExecutionContext
+): Promise<Response> | Response | typeof NOT_FOUND => {
+	const url = new URL(req.url)
 
 	if (url.pathname.startsWith('/auth/')) {
-		return AuthHandler(ctx)
+		return AuthHandler(req, env, ctx)
 	} else if (url.pathname.startsWith('/trpc/')) {
-		return TrpcHandler(ctx)
+		return TrpcHandler(req, env, ctx)
 	}
 
-	return new Response('Not Found', {status: 404})
+	return NOT_FOUND
 }

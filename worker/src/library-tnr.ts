@@ -1,5 +1,5 @@
-export type TnrFunction<
-	Env = unknown,
-	Params extends string = any,
-	Data extends Record<string, unknown> = Record<string, unknown>,
-> = (ctx: EventContext<Env, Params, Data>) => Response | Promise<Response>
+export type TnrFunction<Env = unknown> = (
+	req: Request,
+	env: Env,
+	ctx: ExecutionContext
+) => Response | Promise<Response>

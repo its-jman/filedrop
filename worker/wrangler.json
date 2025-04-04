@@ -1,6 +1,6 @@
 {
 	"name": "digester-worker",
-	"main": "src/index.ts",
+	"main": "./src/index.ts",
 	"compatibility_date": "2024-12-05",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
@@ -14,5 +14,10 @@
 			}
 		]
 	},
-	"migrations": [{"tag": "v1", "new_sqlite_classes": ["FeedStore"]}]
+	"migrations": [{"tag": "v1", "new_sqlite_classes": ["FeedStore"]}],
+	"assets": {
+		"binding": "ASSETS",
+		"not_found_handling": "single-page-application",
+		"directory": "../web/dist"
+	}
 }

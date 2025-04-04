@@ -2,26 +2,23 @@ import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
 
-import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
-import {appRouter} from './trpc'
+import {initSuperJSON} from '~/lib-client'
+import {handler, NOT_FOUND} from './routeTree'
+initSuperJSON()
+
 export {FeedStore} from './stores/feed-store'
 
 export default {
 	async fetch(req, env, ctx): Promise<Response> {
-		const url = new URL(req.url)
+		const resp = await handler(req, env, ctx)
+		if (resp !== NOT_FOUND) return resp
 
-		if (url.pathname === '/trpc') {
-			return fetchRequestHandler({
-				endpoint: '/api/trpc',
-				req,
-				router: appRouter,
-				createContext: () => ({a: ''}),
-				onError({ctx, error}) {
-					const errorLogger = console.error
-					errorLogger(error)
-				},
-			})
+		if (env.DEV_PORT) {
+			const url = new URL(req.url)
+			url.port = env.DEV_PORT
+			return await fetch(new Request(url, req))
+		} else {
+			return env.ASSETS.fetch(req)
 		}
-		return new Response('404')
 	},
 } satisfies ExportedHandler<Env>
