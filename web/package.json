@@ -5,7 +5,7 @@
 	"scripts": {
 		"prepare": "panda codegen",
 		"test": "eslint && tsc && vitest run",
-		"dev": "vite dev --port 3000"
+		"dev": "vite dev --port 3100"
 	},
 	"dependencies": {
 		"@mantine/core": "^7.17.3",

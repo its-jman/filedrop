@@ -14,11 +14,11 @@ export default ts.config(
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{
-					paths: [
+					patterns: [
 						{
-							name: '~server',
-							message: 'Do not import from the server, on the client.',
-							allowTypeImports: false,
+							group: ['~server/*'],
+							message: 'Do not import from the server on the client.',
+							allowTypeImports: true,
 						},
 					],
 				},

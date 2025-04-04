@@ -8,7 +8,7 @@ import {cloudflare} from '@cloudflare/vite-plugin'
 export default defineConfig({
 	plugins: [
 		tsconfigPaths(),
-		TanStackRouterVite({routesDirectory: './src/routes', autoCodeSplitting: true}),
+		TanStackRouterVite({routesDirectory: './src/routes', autoCodeSplitting: false}),
 		react(),
 	],
 })
