@@ -1,5 +1,4 @@
 import type {CfFn} from '~server/lib-server'
-
 import {initTRPC, type inferRouterInputs, type inferRouterOutputs} from '@trpc/server'
 import SuperJSON from 'superjson'
 import {ZodError} from 'zod'
@@ -31,8 +30,8 @@ export type AppRouter = typeof appRouter
 export type RouterInput = inferRouterInputs<AppRouter>
 export type RouterOutput = inferRouterOutputs<AppRouter>
 
-export const handler: CfFn = (req, env, ctx) =>
-	fetchRequestHandler({
+export const handler: CfFn = (req, env, ctx) => {
+	return fetchRequestHandler({
 		endpoint: '/api/trpc',
 		req,
 		router: appRouter,
@@ -42,3 +41,4 @@ export const handler: CfFn = (req, env, ctx) =>
 			errorLogger(error)
 		},
 	})
+}

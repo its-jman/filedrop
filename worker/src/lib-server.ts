@@ -1,8 +1,6 @@
-import {Auth, type AuthConfig} from '@auth/core'
-import Google from '@auth/core/providers/google'
 import {z} from 'zod'
-import type {PagesAuthConfig} from '~server/library-pages-auth-server'
 import type {TnrFunction} from './library-tnr'
+import type {User} from './routes/auth.[[auth]]'
 
 const EnvSchema = z.object({
 	AUTH_SECRET: z.string(),
@@ -18,58 +16,13 @@ export type CfData = {
 export type CfEventCtx<P extends string = never> = EventContext<CfEnv, P, CfData>
 export type CfFn = TnrFunction<Env>
 
-export function getAuthConfig(
-	req: Request,
-	env: Env,
-	ctx: ExecutionContext
-): PagesAuthConfig {
-	return {
-		basePath: '/auth',
-		trustHost: true,
-		secret: env.AUTH_SECRET,
-		// adapter: DrizzleAdapter(data.DB),
-		session: {strategy: 'jwt'},
-		providers: [
-			Google({
-				clientId: env.GOOGLE_CLIENT_ID,
-				clientSecret: env.GOOGLE_CLIENT_SECRET,
-				authorization: {params: {prompt: 'select_account'}},
-			}),
-		],
-	}
-}
-
-const UserSchema = z.object({name: z.string()})
-type User = z.infer<typeof UserSchema>
-const SessionSchema = z.object({user: UserSchema, expires: z.string()})
-type SessionData = z.infer<typeof SessionSchema>
-
-const SessionRespSchema = z
-	.union([SessionSchema, z.object({message: z.string().optional()})])
-	.optional()
-	.nullable()
-
-export async function getSession(
-	req: Request,
-	options: Omit<AuthConfig, 'raw'>
-): Promise<SessionData | null> {
-	try {
-		const url = new URL('/auth/session', req.url)
-		const response = await Auth(new Request(url, {headers: req.headers}), options)
-		const data = await response.json()
-
-		const session = SessionRespSchema.parse(data)
-		if (!session) return null
-
-		if ('user' in session) {
-			return session
-		} else {
-			console.error(session)
-			throw new Error(session.message ?? 'Something went wrong getting the session')
-		}
-	} catch (err) {
-		console.error(err)
-		return null
+export async function fetchWebRequest(req: Request, env: Env, ctx: ExecutionContext) {
+	if (env.DEV_PORT) {
+		const url = new URL(req.url)
+		url.port = env.DEV_PORT
+		return await fetch(new Request(url, req))
+	} else {
+		return env.ASSETS.fetch(req)
 	}
 }
 

@@ -7,14 +7,14 @@ import {httpBatchLink} from '@trpc/client'
 import React from 'react'
 import {Suspense, useState} from 'react'
 import SuperJSON from 'superjson'
-import {createRouter as rawCreateRouter} from '@tanstack/react-router'
+import {createRouter as createTanstackRouter} from '@tanstack/react-router'
 import {routeTree} from '~/routeTree.gen'
 import {trpc, type RouterContext} from './lib-client'
 
 const theme = createTheme({})
 
 const createRouter = (context: RouterContext) => {
-	return rawCreateRouter({
+	return createTanstackRouter({
 		routeTree,
 		context: context,
 		defaultPreload: 'intent',
