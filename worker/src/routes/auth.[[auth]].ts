@@ -1,72 +1,43 @@
-import {Auth, type AuthConfig} from '@auth/core'
-import Google from '@auth/core/providers/google'
-import {z} from 'zod'
-import {fetchWebRequest, type CfFn} from '~server/lib-server'
-import {PagesAuth, type PagesAuthConfig} from '~server/library-pages-auth-server'
+import {betterAuth} from 'better-auth'
+import {drizzleAdapter} from 'better-auth/adapters/drizzle'
+import {magicLink} from 'better-auth/plugins/magic-link'
+import type {DrizzleD1Database} from 'drizzle-orm/d1'
+import type {CfFn, InternalEnv} from '~server/lib-server'
+import {NOT_FOUND} from '~server/library-tnr'
+export {type User} from 'better-auth'
+import * as schema from '~server/schema'
 
-export function getAuthConfig(
-	req: Request,
-	env: Env,
-	ctx: ExecutionContext
-): PagesAuthConfig {
-	return {
+export function buildAuth(env: Env, {DB}: {DB: DrizzleD1Database}) {
+	return betterAuth({
+		// appName: '',
 		basePath: '/auth',
-		trustHost: true,
+		database: drizzleAdapter(DB, {provider: 'sqlite', schema}),
 		secret: env.AUTH_SECRET,
-		// adapter: DrizzleAdapter(data.DB),
-		session: {strategy: 'jwt'},
-		providers: [
-			Google({
+		socialProviders: {
+			google: {
 				clientId: env.GOOGLE_CLIENT_ID,
 				clientSecret: env.GOOGLE_CLIENT_SECRET,
-				authorization: {params: {prompt: 'select_account'}},
-			}),
-		],
-	}
-}
-
-const UserSchema = z.object({name: z.string()})
-export type User = z.infer<typeof UserSchema>
-const SessionSchema = z.object({user: UserSchema, expires: z.string()})
-export type SessionData = z.infer<typeof SessionSchema>
-
-const SessionRespSchema = z
-	.union([SessionSchema, z.object({message: z.string().optional()})])
-	.optional()
-	.nullable()
-
-export async function getSession(
-	req: Request,
-	options: Omit<AuthConfig, 'raw'>
-): Promise<SessionData | null> {
-	try {
-		const url = new URL('/auth/session', req.url)
-		const response = await Auth(new Request(url, {headers: req.headers}), options)
-		const data = await response.json()
-
-		const session = SessionRespSchema.parse(data)
-		if (!session) return null
-
-		if ('user' in session) {
-			return session
-		} else {
-			console.error(session)
-			throw new Error(session.message ?? 'Something went wrong getting the session')
-		}
-	} catch (err) {
-		console.error(err)
-		return null
-	}
+				prompt: 'select_account',
+			},
+		},
+		// plugins: [
+		// 	magicLink({
+		// 		sendMagicLink: async ({email, token, url}, request) => {
+		// 			// send email to user
+		// 		},
+		// 	}),
+		// ],
+	})
 }
 
 const FRONTEND_REPLACEMENTS = ['/auth/verify-request', '/auth/signin', '/auth/error']
-
-export const handler: CfFn = async (req, env, ctx) => {
+export const handler: CfFn = (req, env, ctx) => {
 	const url = new URL(req.url)
-	if (req.method === 'GET' && FRONTEND_REPLACEMENTS.includes(url.pathname)) {
-		return await fetchWebRequest(req, env, ctx)
+	if (
+		!['GET', 'POST'].includes(req.method) ||
+		FRONTEND_REPLACEMENTS.includes(url.pathname)
+	) {
+		return NOT_FOUND
 	}
-
-	const {onRequest: handler} = PagesAuth(getAuthConfig)
-	return await handler(req, env, ctx)
+	return env.AUTH.handler(req)
 }

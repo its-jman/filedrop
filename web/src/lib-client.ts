@@ -5,6 +5,9 @@ import type {Dayjs} from 'dayjs'
 import dayjs from 'dayjs'
 import SuperJSON from 'superjson'
 import type {AppRouter} from '~server/routes/trpc.[[trpc]]'
+import {createAuthClient} from 'better-auth/react'
+import {} from 'better-auth/plugins'
+import type {User} from 'better-auth'
 
 export function initSuperJSON() {
 	SuperJSON.registerCustom(
@@ -22,5 +25,7 @@ export const trpc = createTRPCReact<AppRouter>()
 export type RouterContext = {
 	queryClient: QueryClient
 	utils: CreateReactUtils<AppRouter, unknown>
-	user: null
+	user: User | undefined
 }
+
+export const authClient = createAuthClient({basePath: '/auth'})

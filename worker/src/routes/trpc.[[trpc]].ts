@@ -1,11 +1,15 @@
-import type {CfFn} from '~server/lib-server'
+import type {CfFn, InternalEnv} from '~server/lib-server'
 import {initTRPC, type inferRouterInputs, type inferRouterOutputs} from '@trpc/server'
 import SuperJSON from 'superjson'
 import {ZodError} from 'zod'
 import {fromZodError} from 'zod-validation-error'
 import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
 
-const t = initTRPC.context<{a: string}>().create({
+const createContext = (req: Request, env: InternalEnv, ctx: ExecutionContext) => {
+	return () => ({req, env})
+}
+
+const t = initTRPC.context<ReturnType<ReturnType<typeof createContext>>>().create({
 	transformer: SuperJSON,
 	errorFormatter: ({shape, error}) => {
 		return {
@@ -22,7 +26,9 @@ const _UNAUTHENTICATED_procedure = t.procedure
 
 export const appRouter = t.router({
 	PUBLIC: t.router({
-		getConfig: _UNAUTHENTICATED_procedure.query(async () => ({type: 'testing'})),
+		getCurrentUser: _UNAUTHENTICATED_procedure.query(async ({ctx}) => {
+			return await ctx.env.AUTH.api.getSession({headers: ctx.req.headers})
+		}),
 	}),
 })
 
@@ -32,10 +38,10 @@ export type RouterOutput = inferRouterOutputs<AppRouter>
 
 export const handler: CfFn = (req, env, ctx) => {
 	return fetchRequestHandler({
-		endpoint: '/api/trpc',
+		endpoint: '/trpc',
 		req,
 		router: appRouter,
-		createContext: () => ({a: ''}),
+		createContext: createContext(req, env, ctx),
 		onError({ctx, error}) {
 			const errorLogger = console.error
 			errorLogger(error)

@@ -9,7 +9,7 @@ import {Suspense, useState} from 'react'
 import SuperJSON from 'superjson'
 import {createRouter as createTanstackRouter} from '@tanstack/react-router'
 import {routeTree} from '~/routeTree.gen'
-import {trpc, type RouterContext} from './lib-client'
+import {authClient, trpc, type RouterContext} from './lib-client'
 
 const theme = createTheme({})
 
@@ -31,7 +31,10 @@ declare module '@tanstack/react-router' {
 function AppRouter() {
 	const queryClient = useQueryClient()
 	const utils = trpc.useUtils()
-	const [router] = useState(() => createRouter({queryClient, utils, user: null}))
+	const [sessionData] = trpc.PUBLIC.getCurrentUser.useSuspenseQuery()
+	const [router] = useState(() =>
+		createRouter({queryClient, utils, user: sessionData?.user})
+	)
 
 	return <RouterProvider router={router} />
 }
@@ -46,7 +49,7 @@ export function App() {
 	})
 	const [trpcClient] = useState(() => {
 		return trpc.createClient({
-			links: [httpBatchLink({url: '/api/trpc', transformer: SuperJSON})],
+			links: [httpBatchLink({url: '/trpc', transformer: SuperJSON})],
 		})
 	})
 

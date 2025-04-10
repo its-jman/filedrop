@@ -2,7 +2,7 @@ import {Title} from '@mantine/core'
 import {Link, createFileRoute, redirect} from '@tanstack/react-router'
 import {css} from 'styled-system/css'
 
-export const Route = createFileRoute('/auth/verify-request')({
+export const Route = createFileRoute('/_auth/auth/verify-request')({
 	beforeLoad(ctx) {
 		if (ctx.context.user) {
 			throw redirect({to: '/'})

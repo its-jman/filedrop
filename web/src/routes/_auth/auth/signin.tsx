@@ -4,9 +4,9 @@ import {createFileRoute, redirect} from '@tanstack/react-router'
 import {css} from 'styled-system/css'
 import {grid} from 'styled-system/patterns'
 import {z} from 'zod'
-import {signIn} from '~/library-pages-auth'
+import {authClient} from '~/lib-client'
 
-export const Route = createFileRoute('/auth/signin')({
+export const Route = createFileRoute('/_auth/auth/signin')({
 	component: SignIn,
 	validateSearch: z.object({redirect: z.string().optional()}),
 	beforeLoad(ctx) {
@@ -76,20 +76,25 @@ function SignIn() {
 		<>
 			<div>
 				<img
-					className={css({width: '86px', aspectRatio: 1, mx: 'auto'})}
+					className={css({
+						width: '86px',
+						aspectRatio: 1,
+						mx: 'auto',
+						objectFit: 'contain',
+					})}
 					src="/favicon.png"
 					alt=""
 				/>
 				<div className={css({fontSize: '24px', mt: '24px', textAlign: 'center'})}>
-					SEEAIR
+					File Drop
 				</div>
 				<div className={css({textAlign: 'center', fontSize: '14px', mt: '16px'})}>
-					Login to SEEAIR to continue to your assessment dashboard
+					Login to manage your files
 				</div>
 			</div>
-			<form
+			{/* <form
 				onSubmit={emailForm.onSubmit((values) => {
-					signIn('resend', {callbackUrl: redirect, email: values.email})
+					// signIn('resend', {callbackUrl: redirect, email: values.email})
 				})}
 			>
 				<TextInput
@@ -152,11 +157,11 @@ function SignIn() {
 				})}
 			>
 				OR
-			</div>
-			<div className={grid({columns: 1, gap: '10px'})}>
+			</div> */}
+			<div className={grid({columns: 1, gap: '10px', mt: 4})}>
 				<button
 					className={css(ProviderButtonCss)}
-					onClick={() => signIn('google', {callbackUrl: redirect})}
+					onClick={() => authClient.signIn.social({provider: 'google'})}
 				>
 					{GoogleSvg}
 					Continue with Google

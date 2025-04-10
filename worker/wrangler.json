@@ -1,23 +1,21 @@
 {
-	"name": "digester-worker",
+	"name": "file-drop-worker",
 	"main": "./src/index.ts",
-	"compatibility_date": "2024-12-05",
+	"compatibility_date": "2025-03-21",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
 		"enabled": true
 	},
-	"durable_objects": {
-		"bindings": [
-			{
-				"name": "FEED_STORE",
-				"class_name": "FeedStore"
-			}
-		]
-	},
-	"migrations": [{"tag": "v1", "new_sqlite_classes": ["FeedStore"]}],
 	"assets": {
 		"binding": "ASSETS",
 		"not_found_handling": "single-page-application",
 		"directory": "../web/dist"
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "_DB",
+			"database_name": "file-drop-prod",
+			"database_id": "e870f60a-2c4d-45e9-ada5-92804231f501"
+		}
+	]
 }

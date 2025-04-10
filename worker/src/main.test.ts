@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest'
 
-describe('file-drop', () => {
-	it('tests', () => {
+describe('worker', () => {
+	it('does', () => {
 		expect(true).toBe(true)
 	})
 })
