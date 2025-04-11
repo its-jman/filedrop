@@ -12,7 +12,9 @@
 		"prepare": "nr -C web prepare && nr -C worker prepare",
 		"test": "nr -C web test && nr -C worker test",
 		"precommit": "nr test",
-		"dev": "concurrently \"nr -C web dev\" \"nr -C worker dev\""
+		"dev": "concurrently \"nr -C web dev\" \"nr -C worker dev\"",
+		"drizzle:gen": "drizzle-kit generate",
+		"drizzle:apply": "wrangler d1 execute file-drop-prod --config worker/wrangler.json"
 	},
 	"dependencies": {
 		"@auth/core": "^0.38.0",
@@ -28,6 +30,7 @@
 		"husky": "^9.1.7",
 		"kysely": "^0.27.6",
 		"kysely-d1": "^0.3.0",
+		"nanoid": "^5.1.5",
 		"prettier": "^3.5.3",
 		"superjson": "^2.2.2",
 		"typescript": "^5.8.2",

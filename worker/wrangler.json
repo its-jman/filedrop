@@ -1,6 +1,6 @@
 {
 	"name": "file-drop-worker",
-	"main": "./src/index.ts",
+	"main": "./src/main.ts",
 	"compatibility_date": "2025-03-21",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {

@@ -8,6 +8,7 @@ import type {AppRouter} from '~server/routes/trpc.[[trpc]]'
 import {createAuthClient} from 'better-auth/react'
 import {} from 'better-auth/plugins'
 import type {User} from 'better-auth'
+import {nanoid} from 'nanoid'
 
 export function initSuperJSON() {
 	SuperJSON.registerCustom(
@@ -20,6 +21,7 @@ export function initSuperJSON() {
 	)
 }
 
+export const genId = () => nanoid(10)
 export const trpc = createTRPCReact<AppRouter>()
 
 export type RouterContext = {

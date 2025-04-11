@@ -4,14 +4,14 @@ import {
 	useRouteContext,
 	useRouterState,
 } from '@tanstack/react-router'
+import {useState} from 'react'
 import {authClient} from '~/lib-client'
 
-export const Route = createFileRoute('/')({component: HomeComponent})
+export const Route = createFileRoute('/_layout/')({component: HomeComponent})
 
 function HomeComponent() {
 	const nav = useNavigate()
-	const route = useRouterState().matches.at(-1)
-	const user = route?.context.user
+	const {user} = useRouteContext({from: '/_layout/'})
 
 	return (
 		<div className="p-2">
