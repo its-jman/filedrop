@@ -9,8 +9,15 @@ export default ts.config(
 	ts.configs.recommended,
 	{
 		rules: {
+			'prefer-const': 'off',
 			'@typescript-eslint/no-unused-vars': 'off',
 			'@typescript-eslint/no-explicit-any': 'off',
+			'no-empty': 'off',
+		},
+	},
+	{
+		ignores: ['./worker/**'],
+		rules: {
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{

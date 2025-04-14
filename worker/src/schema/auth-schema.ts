@@ -8,6 +8,7 @@ export const user = sqliteTable('user', {
 	image: text('image'),
 	createdAt: integer('created_at', {mode: 'timestamp'}).notNull(),
 	updatedAt: integer('updated_at', {mode: 'timestamp'}).notNull(),
+	role: text('role'),
 })
 
 export const account = sqliteTable('account', {

@@ -1,12 +1,13 @@
 import {Avatar, Text, Menu, UnstyledButton, Loader} from '@mantine/core'
 import {Link, useRouteContext} from '@tanstack/react-router'
-import type {PropsWithChildren} from 'react'
+import {Suspense, type PropsWithChildren} from 'react'
 import {css} from 'styled-system/css'
 import {flex} from 'styled-system/patterns'
+import {authClient, isSiteAdmin} from '~/lib-client'
 import type {User} from '~server/routes/auth.[[auth]]'
 
 export const styles = {
-	PageWrap: css.raw({maxWidth: '1248px', mx: 'auto', px: '24px'}),
+	PageWrap: css.raw({maxW: '1000px', mx: 'auto', px: '24px'}),
 }
 
 export const PageWrap = ({children}: PropsWithChildren) => (
@@ -53,23 +54,20 @@ export function LoginAvatar(props: LoginAvatarProps) {
 				</UnstyledButton>
 			</Menu.Target>
 			<Menu.Dropdown>
-				<Menu.Item component={Link} to="/homes">
-					View Your Homes
-				</Menu.Item>
-				<Menu.Item component={Link} to="/homes/import-order">
-					Import a new order
-				</Menu.Item>
-				{/* {isSiteAdmin(user) && (
+				{isSiteAdmin(user) && (
 					<Menu.Item component={Link} to="/admin">
 						Admin
 					</Menu.Item>
 				)}
 				<Menu.Item
-					onClick={() => signOut({callbackUrl: '/'})}
+					onClick={async () => {
+						await authClient.signOut()
+						window.location.reload()
+					}}
 					classNames={{item: css({_hover: {textDecoration: 'underline'}})}}
 				>
 					Sign Out
-				</Menu.Item> */}
+				</Menu.Item>
 			</Menu.Dropdown>
 		</Menu>
 	)
@@ -80,14 +78,22 @@ export function Layout(props: PropsWithChildren) {
 
 	return (
 		<>
+			{/* <button onClick={() => nav({to: '/auth/signin'})}>Sign in</button>
+			<button
+				onClick={async () => {
+					await authClient.signOut()
+					window.location.reload()
+				}}
+			>
+				Sign out
+			</button> */}
 			{user && (
 				<header>
-					<PageWrap>
+					<div className={css({...styles.PageWrap, maxW: '1248px'})}>
 						<div
 							className={flex({
 								align: 'center',
 								height: '70px',
-								justifyContent: 'space-between',
 							})}
 						>
 							<Link
@@ -100,16 +106,23 @@ export function Layout(props: PropsWithChildren) {
 							>
 								File Drop
 							</Link>
-							{user ? (
-								<LoginAvatar user={user} />
-							) : (
-								<Link to="/auth/signin">Sign In</Link>
-							)}
+							<div className={flex({ml: 'auto', alignItems: 'center'})}>
+								<div className={css({mr: 4})}>
+									<Link to="/drops/create">+ Create Drop</Link>
+								</div>
+								{user ? (
+									<LoginAvatar user={user} />
+								) : (
+									<Link to="/auth/signin">Sign In</Link>
+								)}
+							</div>
 						</div>
-					</PageWrap>
+					</div>
 				</header>
 			)}
-			<main className={css({flexGrow: 1})}>{props.children}</main>
+			<main className={css({flexGrow: 1})}>
+				<Suspense fallback={SuspenseLoader}>{props.children}</Suspense>
+			</main>
 			<footer className={css({mt: '64px', mb: '24px'})}></footer>
 		</>
 	)

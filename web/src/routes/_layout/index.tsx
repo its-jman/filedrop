@@ -1,30 +1,45 @@
 import {
 	createFileRoute,
+	Link,
 	useNavigate,
 	useRouteContext,
 	useRouterState,
 } from '@tanstack/react-router'
 import {useState} from 'react'
-import {authClient} from '~/lib-client'
+import {css} from 'styled-system/css'
+import {authClient, trpc} from '~/lib-client'
+import {GoogleSignin} from '../_auth/auth/-components'
+import {flex} from 'styled-system/patterns'
+import {PageWrap} from '~/components'
 
 export const Route = createFileRoute('/_layout/')({component: HomeComponent})
 
 function HomeComponent() {
-	const nav = useNavigate()
 	const {user} = useRouteContext({from: '/_layout/'})
+	const drops = trpc.listMyDrops.useQuery(undefined, {enabled: Boolean(user)})
 
 	return (
 		<div className="p-2">
-			<h3>Welcome Home{user ? `, ${user.name}!` : '!'}</h3>
-			<button onClick={() => nav({to: '/auth/signin'})}>Sign in</button>
-			<button
-				onClick={async () => {
-					await authClient.signOut()
-					window.location.reload()
-				}}
-			>
-				Sign out
-			</button>
+			<PageWrap>
+				{user ? (
+					<div>
+						<div>Your drops:</div>
+						<div>
+							{drops.data?.map((drop) => (
+								<div key={drop.drop_id}>
+									<Link to="/drops/$drop_id" params={{drop_id: drop.drop_id}}>
+										{drop.name}
+									</Link>
+								</div>
+							))}
+						</div>
+					</div>
+				) : (
+					<div className={flex({alignItems: 'center', justifyContent: 'center', pt: 40})}>
+						<GoogleSignin />
+					</div>
+				)}
+			</PageWrap>
 		</div>
 	)
 }

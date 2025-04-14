@@ -7,7 +7,7 @@ import {NOT_FOUND} from '~server/library-tnr'
 import {type User as BetterAuthUser} from 'better-auth'
 import * as schema from '~server/schema'
 
-export type User = BetterAuthUser
+export type User = BetterAuthUser & {role: string}
 
 const FRONTEND_REPLACEMENTS = ['/auth/verify-request', '/auth/signin', '/auth/error']
 export const handler: CfFn = (req, env, ctx) => {
@@ -23,6 +23,14 @@ export const handler: CfFn = (req, env, ctx) => {
 
 export function buildAuth(env: Env, {DB}: {DB: DrizzleD1Database}) {
 	return betterAuth({
+		user: {
+			additionalFields: {
+				role: {
+					type: 'string',
+					nullable: 'true',
+				},
+			},
+		},
 		// appName: '',
 		basePath: '/auth',
 		database: drizzleAdapter(DB, {provider: 'sqlite', schema}),
@@ -43,3 +51,4 @@ export function buildAuth(env: Env, {DB}: {DB: DrizzleD1Database}) {
 		// ],
 	})
 }
+export type AuthType = ReturnType<typeof buildAuth>

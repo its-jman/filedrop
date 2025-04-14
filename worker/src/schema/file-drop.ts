@@ -10,9 +10,9 @@ export const drops = sqliteTable('drops', {
 export const files = sqliteTable(
 	'files',
 	{
-		file_id: text('file_id').primaryKey(),
 		drop_id: text('drop_id').notNull(),
-		file_path: text('file_path').notNull(),
+		file_id: text('file_id').primaryKey(),
+		file_name: text('file_name').notNull(),
 		metadata_json: text('metadata_json').notNull(),
 	},
 	(file) => [index('drop_id_idx').on(file.drop_id)]

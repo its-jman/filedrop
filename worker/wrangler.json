@@ -17,5 +17,12 @@
 			"database_name": "file-drop-prod",
 			"database_id": "e870f60a-2c4d-45e9-ada5-92804231f501"
 		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "file-drop-bucket-prod",
+			"preview_bucket_name": "file-drop-bucket-prod",
+			"binding": "R2"
+		}
 	]
 }
