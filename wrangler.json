@@ -1,5 +1,5 @@
 {
-	"name": "file-drop-worker",
+	"name": "filedrop",
 	"main": "./worker/src/main.ts",
 	"compatibility_date": "2025-03-21",
 	"compatibility_flags": ["nodejs_compat"],
