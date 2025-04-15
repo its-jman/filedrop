@@ -4,10 +4,10 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"prepare": "nr gen-types",
+		"prepare": "npm run gen-types",
 		"gen-types": "wrangler types",
-		"typecheck": "nr gen-types && tsc",
-		"dev": "nr gen-types && wrangler dev --port 3000",
+		"typecheck": "npm run gen-types && tsc",
+		"dev": "npm run gen-types && wrangler dev --port 3000",
 		"test": "vitest run",
 		"build": "wrangler build"
 	}

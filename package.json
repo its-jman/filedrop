@@ -9,11 +9,11 @@
 		"worker"
 	],
 	"scripts": {
-		"prepare": "nr -C web prepare && nr -C worker prepare",
-		"test": "nr -C web test && nr -C worker test",
-		"build": "nr -C web build && nr -C worker build",
-		"precommit": "nr test",
-		"dev": "concurrently \"nr -C web dev\" \"nr -C worker dev\"",
+		"prepare": "npm run -C web prepare && npm run -C worker prepare",
+		"test": "npm run -C web test && npm run -C worker test",
+		"build": "npm run -C web build && npm run -C worker build",
+		"precommit": "npm run test",
+		"dev": "concurrently \"npm run -C web dev\" \"npm run -C worker dev\"",
 		"drizzle:gen": "drizzle-kit generate",
 		"drizzle:apply": "wrangler d1 execute file-drop-prod --config worker/wrangler.json"
 	},
