@@ -10,7 +10,7 @@ import {z, ZodError} from 'zod'
 import {fromZodError} from 'zod-validation-error'
 import {fetchRequestHandler} from '@trpc/server/adapters/fetch'
 import * as schema from '~server/schema'
-import {genId, sleep} from '~/lib-client'
+import {genId, isSiteAdmin, sleep} from '~/lib-client'
 import {and, eq} from 'drizzle-orm'
 import {AwsClient} from 'aws4fetch'
 
@@ -48,6 +48,15 @@ const t = initTRPC
 	})
 
 const _UNAUTHENTICATED_procedure = t.procedure
+const _ADMIN_procedure = t.procedure.use(
+	t.middleware(({ctx, next}) => {
+		if (!ctx.data.user || !isSiteAdmin(ctx.data.user)) {
+			throw new TRPCError({code: 'UNAUTHORIZED'})
+		}
+		// TODO: This isn't necessary... But how otherwise to type-safe assume the assertion from above?
+		return next({ctx: {...ctx, data: {...ctx.data, user: ctx.data.user}}})
+	})
+)
 const procedure = t.procedure.use(
 	t.middleware(({ctx, next}) => {
 		if (!ctx.data.user) {
@@ -107,7 +116,7 @@ export const appRouter = t.router({
 				return {drop: drops[0], files: urls}
 			}),
 	}),
-	createDrop: procedure
+	createDrop: _ADMIN_procedure
 		.input(z.object({name: z.string()}))
 		.mutation(async ({input, ctx}) => {
 			const {DB} = ctx.env
@@ -127,7 +136,7 @@ export const appRouter = t.router({
 			.from(schema.drops)
 			.where(eq(schema.drops.owner_user_id, ctx.data.user.id))
 	}),
-	requestUploads: procedure
+	requestUploads: _ADMIN_procedure
 		.input(z.object({drop_id: z.string(), file_names: z.array(z.string())}))
 		.mutation(async ({ctx, input}) => {
 			const {DB} = ctx.env
