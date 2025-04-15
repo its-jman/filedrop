@@ -6,7 +6,7 @@ import {
 	useParams,
 	useRouteContext,
 } from '@tanstack/react-router'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {css} from 'styled-system/css'
 import {flex, grid} from 'styled-system/patterns'
 import {PageWrap} from '~/components'
@@ -46,6 +46,8 @@ function RouteComponent() {
 	const [selected, setSelected] = useState<FileInfo[]>([])
 	const [opened, setOpened] = useState<FileInfo | null>(null)
 	const nav = useNavigate()
+	const [img, openedRef] = useState<HTMLImageElement | null>(null)
+	const [aspect, setAspect] = useState(1)
 
 	useEffect(() => {
 		const onClick = (event: MouseEvent) => setSelected([])
@@ -54,6 +56,11 @@ function RouteComponent() {
 			document.removeEventListener('click', onClick)
 		}
 	}, [])
+
+	useLayoutEffect(() => {
+		if (img) setAspect(img.naturalWidth / img.naturalHeight)
+		else setAspect(1)
+	}, [img])
 
 	const onDrop = async (files: File[]) => {
 		const urls = await requestUploads.mutateAsync({
@@ -216,10 +223,29 @@ function RouteComponent() {
 					title={null}
 					size="1000px"
 					padding={0}
-					classNames={{content: css({bgColor: 'transparent'})}}
+					style={{'--aspect': aspect} as React.CSSProperties}
+					classNames={{
+						content: css({bgColor: 'transparent'}),
+						inner: css({
+							justifyContent: 'center',
+							alignItems: 'center',
+							...(aspect > 1 ? {flexDir: 'row'} : {flexDir: 'column'}),
+						}),
+						body: css({aspectRatio: 'var(--aspect)', maxH: '100%', maxW: '100%'}),
+					}}
 				>
 					<img
-						className={css({width: '100%', objectFit: 'contain'})}
+						ref={openedRef}
+						className={css({
+							// position: 'absolute',
+							// top: '50%',
+							// left: '50%',
+							// transform: 'translate(-50%, -50%)',
+							// maxH: '100%',
+							// maxW: '100%',
+							objectFit: 'cover',
+							aspectRatio: 'auto',
+						})}
 						src={opened.signed_url}
 					/>
 				</Modal>
@@ -280,6 +306,7 @@ function FileCard({
 			<img
 				src={file.signed_url}
 				onError={() => {}}
+				// We want this as a square, fill the entire FileCard
 				className={css({borderRadius: 4, objectFit: 'cover', aspectRatio: 1})}
 			/>
 		</div>
