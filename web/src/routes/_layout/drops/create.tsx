@@ -1,12 +1,17 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router'
+import {createFileRoute, redirect, useNavigate} from '@tanstack/react-router'
 import {Loader, Text, TextInput} from '@mantine/core'
 import {PageWrap, SuspenseLoader} from '~/components'
 import {css} from 'styled-system/css'
 import {Form, useForm} from '@mantine/form'
-import {trpc} from '~/lib-client'
+import {isSiteAdmin, trpc} from '~/lib-client'
 
 export const Route = createFileRoute('/_layout/drops/create')({
 	component: RouteComponent,
+	beforeLoad(ctx) {
+		if (!ctx.context.user || !isSiteAdmin(ctx.context.user)) {
+			throw redirect({to: '/'})
+		}
+	},
 })
 
 function RouteComponent() {
@@ -31,6 +36,10 @@ function RouteComponent() {
 					leftSection={createDrop.isPending && <Loader size="xs" />}
 					{...form.getInputProps('name')}
 				/>
+
+				{createDrop.error && (
+					<span className={css({color: 'red.600'})}>{createDrop.error?.message}</span>
+				)}
 			</Form>
 		</div>
 	)

@@ -87,39 +87,39 @@ export function Layout(props: PropsWithChildren) {
 			>
 				Sign out
 			</button> */}
-			{user && (
-				<header>
-					<div className={css({...styles.PageWrap, maxW: '1248px'})}>
-						<div
-							className={flex({
-								align: 'center',
-								height: '70px',
+			<header>
+				<div className={css({...styles.PageWrap, maxW: '1248px'})}>
+					<div
+						className={flex({
+							align: 'center',
+							height: '70px',
+						})}
+					>
+						<Link
+							to="/"
+							className={css({
+								fontSize: '24px',
+								fontWeight: 'bold',
+								_hover: {textDecoration: 'none'},
 							})}
 						>
-							<Link
-								to="/"
-								className={css({
-									fontSize: '24px',
-									fontWeight: 'bold',
-									_hover: {textDecoration: 'none'},
-								})}
-							>
-								File Drop
-							</Link>
-							<div className={flex({ml: 'auto', alignItems: 'center'})}>
+							File Drop
+						</Link>
+						<div className={flex({ml: 'auto', alignItems: 'center'})}>
+							{user && isSiteAdmin(user) && (
 								<div className={css({mr: 4})}>
 									<Link to="/drops/create">+ Create Drop</Link>
 								</div>
-								{user ? (
-									<LoginAvatar user={user} />
-								) : (
-									<Link to="/auth/signin">Sign In</Link>
-								)}
-							</div>
+							)}
+							{user ? (
+								<LoginAvatar user={user} />
+							) : (
+								<Link to="/auth/signin">Sign In</Link>
+							)}
 						</div>
 					</div>
-				</header>
-			)}
+				</div>
+			</header>
 			<main className={css({flexGrow: 1})}>
 				<Suspense fallback={SuspenseLoader}>{props.children}</Suspense>
 			</main>

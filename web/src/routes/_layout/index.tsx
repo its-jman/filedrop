@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-router'
 import {useState} from 'react'
 import {css} from 'styled-system/css'
-import {authClient, trpc} from '~/lib-client'
+import {authClient, isSiteAdmin, trpc} from '~/lib-client'
 import {GoogleSignin} from '../_auth/auth/-components'
 import {flex} from 'styled-system/patterns'
 import {PageWrap} from '~/components'
@@ -25,6 +25,7 @@ function HomeComponent() {
 					<div>
 						<div>Your drops:</div>
 						<div>
+							{!isSiteAdmin(user) && <div>You must be an admin to create drops.</div>}
 							{drops.data?.map((drop) => (
 								<div key={drop.drop_id}>
 									<Link to="/drops/$drop_id" params={{drop_id: drop.drop_id}}>
