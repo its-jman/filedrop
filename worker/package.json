@@ -8,6 +8,7 @@
 		"gen-types": "wrangler types",
 		"typecheck": "nr gen-types && tsc",
 		"dev": "nr gen-types && wrangler dev --port 3000",
-		"test": "vitest run"
+		"test": "vitest run",
+		"build": "wrangler build"
 	}
 }

@@ -11,6 +11,7 @@
 	"scripts": {
 		"prepare": "nr -C web prepare && nr -C worker prepare",
 		"test": "nr -C web test && nr -C worker test",
+		"build": "nr -C web build && nr -C worker build",
 		"precommit": "nr test",
 		"dev": "concurrently \"nr -C web dev\" \"nr -C worker dev\"",
 		"drizzle:gen": "drizzle-kit generate",

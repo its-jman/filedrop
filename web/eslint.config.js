@@ -3,7 +3,7 @@ import eslint from '@eslint/js'
 
 export default ts.config(
 	{
-		ignores: ['styled-system'],
+		ignores: ['styled-system', 'dist'],
 	},
 	eslint.configs.recommended,
 	ts.configs.recommended,
