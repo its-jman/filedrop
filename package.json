@@ -12,10 +12,10 @@
 		"prepare": "npm run -C web prepare && npm run -C worker prepare",
 		"test": "npm run -C web test && npm run -C worker test",
 		"build": "npm run -C web build && npm run -C worker build",
-		"precommit": "npm run test",
+		"precommit": "concurrently \"npm run test\" \"npm run build\"",
 		"dev": "concurrently \"npm run -C web dev\" \"npm run -C worker dev\"",
 		"drizzle:gen": "drizzle-kit generate",
-		"drizzle:apply": "wrangler d1 execute file-drop-prod --config worker/wrangler.json"
+		"drizzle:apply": "wrangler d1 execute file-drop-prod"
 	},
 	"dependencies": {
 		"@auth/core": "^0.38.0",

@@ -1,6 +1,6 @@
 {
 	"name": "file-drop-worker",
-	"main": "./src/main.ts",
+	"main": "./worker/src/main.ts",
 	"compatibility_date": "2025-03-21",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
@@ -9,7 +9,7 @@
 	"assets": {
 		"binding": "ASSETS",
 		"not_found_handling": "single-page-application",
-		"directory": "../web/dist"
+		"directory": "./web/dist"
 	},
 	"d1_databases": [
 		{
