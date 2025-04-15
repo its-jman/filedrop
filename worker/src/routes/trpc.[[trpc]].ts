@@ -204,7 +204,9 @@ export const appRouter = t.router({
 					eq(schema.files.drop_id, input.drop_id)
 				)
 				const items = await ctx.env.R2.list({prefix: `/drops/${input.drop_id}`})
-				await ctx.env.R2.delete(items.objects.map((obj) => obj.key))
+				if (items.objects.length > 0) {
+					await ctx.env.R2.delete(items.objects.map((obj) => obj.key))
+				}
 				console.log(
 					`Deleting "${deletedRows.meta.rows_written}" rows. Deleting "${items.objects.length}" files`
 				)
