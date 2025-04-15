@@ -1,4 +1,6 @@
 import {Avatar, Text, Menu, UnstyledButton, Loader} from '@mantine/core'
+import {useMediaQuery} from '@mantine/hooks'
+import {HamburgerMenuIcon} from '@radix-ui/react-icons'
 import {Link, useRouteContext} from '@tanstack/react-router'
 import {Suspense, type PropsWithChildren} from 'react'
 import {css} from 'styled-system/css'
@@ -75,6 +77,7 @@ export function LoginAvatar(props: LoginAvatarProps) {
 
 export function Layout(props: PropsWithChildren) {
 	const {user} = useRouteContext({from: '/_layout'})
+	const isDesktop = useMediaQuery('(min-width: 56.25em)')
 
 	return (
 		<>
@@ -106,15 +109,21 @@ export function Layout(props: PropsWithChildren) {
 							File Drop
 						</Link>
 						<div className={flex({ml: 'auto', alignItems: 'center'})}>
-							{user && isSiteAdmin(user) && (
-								<div className={css({mr: 4})}>
-									<Link to="/drops/create">+ Create Drop</Link>
-								</div>
-							)}
-							{user ? (
-								<LoginAvatar user={user} />
+							{isDesktop ? (
+								<>
+									{user && isSiteAdmin(user) && (
+										<div className={css({mr: 4})}>
+											<Link to="/drops/create">+ Create Drop</Link>
+										</div>
+									)}
+									{user ? (
+										<LoginAvatar user={user} />
+									) : (
+										<Link to="/auth/signin">Sign In</Link>
+									)}
+								</>
 							) : (
-								<Link to="/auth/signin">Sign In</Link>
+								<MobileMenu user={user} />
 							)}
 						</div>
 					</div>
@@ -125,5 +134,46 @@ export function Layout(props: PropsWithChildren) {
 			</main>
 			<footer className={css({mt: '64px', mb: '24px'})}></footer>
 		</>
+	)
+}
+
+function MobileMenu({user}: {user: User | undefined}) {
+	if (!user) return <Link to="/auth/signin">Sign In</Link>
+	return (
+		<Menu>
+			<Menu.Target>
+				<UnstyledButton
+					className={css({
+						borderRadius: 5,
+						px: 2,
+						py: 1,
+						_hover: {backgroundColor: 'gray.200'},
+					})}
+				>
+					<HamburgerMenuIcon />
+				</UnstyledButton>
+			</Menu.Target>
+			<Menu.Dropdown>
+				{isSiteAdmin(user) && (
+					<Menu.Item component={Link} to="/drops/create">
+						+ Create Drop
+					</Menu.Item>
+				)}
+				{isSiteAdmin(user) && (
+					<Menu.Item component={Link} to="/admin">
+						Admin
+					</Menu.Item>
+				)}
+				<Menu.Item
+					onClick={async () => {
+						await authClient.signOut()
+						window.location.reload()
+					}}
+					classNames={{item: css({_hover: {textDecoration: 'underline'}})}}
+				>
+					Sign Out
+				</Menu.Item>
+			</Menu.Dropdown>
+		</Menu>
 	)
 }

@@ -157,6 +157,7 @@ function RouteComponent() {
 								alignItems: 'center',
 								justifyContent: 'center',
 								minH: '250px',
+								textAlign: 'center',
 							})}
 						>
 							<Text>Your bucket is ready. Add files to get started.</Text>
@@ -225,7 +226,7 @@ function RouteComponent() {
 					padding={0}
 					style={{'--aspect': aspect} as React.CSSProperties}
 					classNames={{
-						content: css({bgColor: 'transparent'}),
+						content: css({bgColor: 'transparent', flexBasis: 'fit-content'}),
 						inner: css({
 							justifyContent: 'center',
 							alignItems: 'center',
@@ -236,16 +237,7 @@ function RouteComponent() {
 				>
 					<img
 						ref={openedRef}
-						className={css({
-							// position: 'absolute',
-							// top: '50%',
-							// left: '50%',
-							// transform: 'translate(-50%, -50%)',
-							// maxH: '100%',
-							// maxW: '100%',
-							objectFit: 'cover',
-							aspectRatio: 'auto',
-						})}
+						className={css({objectFit: 'cover', aspectRatio: 'auto'})}
 						src={opened.signed_url}
 					/>
 				</Modal>
@@ -385,6 +377,11 @@ function UploadManager({
 					shadow: 'xl',
 					borderTopLeftRadius: 8,
 					borderTopRightRadius: 8,
+					smDown: {
+						left: '10px',
+						right: '10px',
+						maxW: 'calc(100dvw - 20px)',
+					},
 				})}
 			>
 				<div
