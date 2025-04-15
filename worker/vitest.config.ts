@@ -8,7 +8,7 @@ export default defineWorkersConfig({
 		typecheck: {enabled: true},
 		poolOptions: {
 			workers: {
-				wrangler: {configPath: './wrangler.json'},
+				wrangler: {configPath: '../wrangler.json'},
 			},
 		},
 	},
