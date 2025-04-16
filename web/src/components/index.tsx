@@ -2,7 +2,7 @@ import {Avatar, Text, Menu, UnstyledButton, Loader} from '@mantine/core'
 import {useMediaQuery} from '@mantine/hooks'
 import {HamburgerMenuIcon} from '@radix-ui/react-icons'
 import {Link, useRouteContext} from '@tanstack/react-router'
-import {Suspense, type PropsWithChildren} from 'react'
+import {Suspense, useEffect, useState, type PropsWithChildren} from 'react'
 import {css} from 'styled-system/css'
 import {flex} from 'styled-system/patterns'
 import {authClient, isSiteAdmin} from '~/lib-client'
@@ -176,4 +176,27 @@ function MobileMenu({user}: {user: User | undefined}) {
 			</Menu.Dropdown>
 		</Menu>
 	)
+}
+
+export const useScreenSize = () => {
+	const [screenSize, setScreenSize] = useState({
+		width: window.innerWidth,
+		height: window.innerHeight,
+	})
+
+	useEffect(() => {
+		const onResize = () => {
+			setScreenSize({
+				width: window.innerWidth,
+				height: window.innerHeight,
+			})
+		}
+
+		window.addEventListener('resize', onResize)
+		return () => {
+			window.removeEventListener('resize', onResize)
+		}
+	}, [])
+
+	return screenSize
 }

@@ -9,7 +9,7 @@ import {
 import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {css} from 'styled-system/css'
 import {flex, grid} from 'styled-system/patterns'
-import {PageWrap} from '~/components'
+import {PageWrap, useScreenSize} from '~/components'
 import {fetchWithProgress, genId, trpc} from '~/lib-client'
 import {
 	TrashIcon,
@@ -61,6 +61,8 @@ function RouteComponent() {
 		if (img) setAspect(img.naturalWidth / img.naturalHeight)
 		else setAspect(1)
 	}, [img])
+	const screenSize = useScreenSize()
+	const screenAspect = screenSize.width / screenSize.height
 
 	const onDrop = async (files: File[]) => {
 		const urls = await requestUploads.mutateAsync({
@@ -230,7 +232,7 @@ function RouteComponent() {
 						inner: css({
 							justifyContent: 'center',
 							alignItems: 'center',
-							...(aspect > 1 ? {flexDir: 'row'} : {flexDir: 'column'}),
+							...(aspect > screenAspect ? {flexDir: 'row'} : {flexDir: 'column'}),
 						}),
 						body: css({aspectRatio: 'var(--aspect)', maxH: '100%', maxW: '100%'}),
 					}}
