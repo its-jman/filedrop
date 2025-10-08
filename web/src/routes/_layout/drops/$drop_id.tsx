@@ -227,6 +227,7 @@ function RouteComponent() {
 					size="1000px"
 					padding={0}
 					style={{'--aspect': aspect} as React.CSSProperties}
+					removeScrollProps={{allowPinchZoom: true}}
 					classNames={{
 						content: css({bgColor: 'transparent', flexBasis: 'fit-content'}),
 						inner: css({
